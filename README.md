@@ -32,7 +32,8 @@ optional arguments:
   -r, --restart-logstash
                         restart logstash with the generated config, if it is 
                         not already running as a daemon
-
+  -i IP, --ip IP        IP address for Kibana and ElasticSearch instance,
+                        defaults to localhost.
 ```
 
 
