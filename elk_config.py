@@ -14,14 +14,14 @@ def ConfigElk(ip):
     jcheck   =  getoutput('java -version')
     escheck  = getoutput('/etc/init.d/elasticsearch status')
     kicheck  = getoutput('/etc/init.d/kibana status')
-    logcheck = getoutput('/etc/init.d/logstash status')
+    logcheck = os.path.exists("/etc/init.d/logstash")
     if not "Java(TM) SE Runtime Environment" in jcheck:
        JavaUpdateCheck()
     if not "elasticsearch is running" in escheck:
        ElasticSearchInstall(ip)
     if not "kibana is running" in kicheck:
        KibanaInstall(ip)
-    if not "logstash is running" in logcheck:
+    if logcheck == False:
        LogstashInstall(ip)
 
 
