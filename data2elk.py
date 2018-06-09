@@ -109,6 +109,8 @@ if __name__ == "__main__":
                         help='restart logstash with the generated config, if it is not already running as a daemon')
     parser.add_argument('-i', '--ip', default='localhost',
                         help='IP address for Kibana and ElasticSearch instance, defaults to localhost.')
+    parser.add_argument('--skip-install', action='store_true', default=False,
+			help='skip ELK installation')
     args = parser.parse_args()    
 
     if not args.file:
@@ -119,7 +121,7 @@ if __name__ == "__main__":
         sys.stdout.write("File does not exist: {}\n".format(args.file))
         sys.exit(1)
 
-    if sys.platform.startswith('linux'):
+    if sys.platform.startswith('linux') and not args.skip_install:
         config_elk(args.ip)
 
     columns = []
