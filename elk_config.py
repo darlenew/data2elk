@@ -4,7 +4,18 @@
 import os
 import sys
 import subprocess
+import requests
 from commands import *
+
+
+def _get_latest_version():
+    """Return current ELK stack major version as an integer"""
+    URL = 'https://www.elastic.co/guide/en/elasticsearch/reference/{}.x/deb.html'
+    version = 5
+    while requests.get(URL.format(version + 1)).status_code == 200:
+        version += 1
+
+    return version
 
 
 def execute(cmd):
@@ -33,9 +44,11 @@ def ConfigElk(ip):
        JavaUpdateCheck()
 
     # install public signing key
+    latest_version = _get_latest_version()
     execute("wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -")
     execute("sudo apt-get install apt-transport-https")
-    execute("echo \"deb https://artifacts.elastic.co/packages/6.x/apt stable main\" | sudo tee -a /etc/apt/sources.list.d/elastic-6.x.list")
+    execute("echo \"deb https://artifacts.elastic.co/packages/{latest_version}.x/apt stable main\" | sudo tee -a /etc/apt/sources.list.d/elastic-{latest_version}.x.list".format(
+            latest_version=latest_version))
 
     if not "elasticsearch is running" in escheck:
        ElasticSearchInstall(ip)
